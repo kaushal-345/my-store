@@ -1,23 +1,4 @@
-const products = [
-  {
-    id: 1,
-    name: "Product 1",
-    desc: "Description of the product. Description of the product. ",
-    price: 25,
-  },
-  {
-    id: 2,
-    name: "Product 2",
-    desc: "Description of the product. Description of the product. ",
-    price: 45,
-  },
-  {
-    id: 3,
-    name: "Product 3",
-    desc: "Description of the product. Description of the product. ",
-    price: 30,
-  },
-];
+let products = [];
 const cart = {};
 let users = [];
 let user = {};
@@ -48,7 +29,10 @@ const showMain = () => {
   <div class="container">
       <div class="header">
         <h1>My Store</h1>
-        <h4 onclick="displayCart()">Cart:<span id="items"></span></h4>
+        <div style='display:flex'>
+          <div onclick="displayCart()">Cart:<span id="items"></span></div>
+          <div><button onclick='showLogin()'>Logout</button></div>
+        </div>
       </div>
       <div class="productBlock">
         <div id="divProducts"></div>
@@ -94,7 +78,7 @@ const hideCart = () => {
 
 function showLogin() {
   let str = `
-  <div>
+  <div class='login'>
       <h2>Login Form</h2>
       <div id='msg'></div>
       <p><input id="email" type="text"></p>
@@ -107,7 +91,7 @@ function showLogin() {
 }
 
 function showForm() {
-  let str = `
+  let str = `<div class='registration'>
   <h2>Registration Form</h2>
   <p><input type="text" id="name" placeholder="Name"></p>
   <p><input type="text" id="email" placeholder="Email"></p>
@@ -116,7 +100,7 @@ function showForm() {
   <p><button onclick='addUser()'>Submit</button></p>
   <p>Already a member?<button onclick='showLogin()'>Login Here</button></p>
   `;
-  root.innerHTML = str;
+  root.innerHTML = str + "</div>"
 }
 
 function chkUser() {
@@ -153,16 +137,21 @@ function addUser() {
 }
 
 const showProducts = () => {
-  let str = "<div class='row'>";
-  products.map((value) => {
-    str += `
-      <div class='box'>
-      <h3>${value.name}</h3>
-      <p>${value.desc}</p>
-      <h4>$${value.price}</h4>
-      <button onclick=addToCart(${value.id})>Add to Cart</button>
-      </div>
-      `;
-  });
-  divProducts.innerHTML = str + "</div>";
+  fetch("products.json")
+    .then((res) => res.json())
+    .then((data) => (products = data))
+    .then(() => {
+      let str = "<div class='row'>";
+      products.map((value) => {
+        str += `
+          <div class='box'>
+          <h3>${value.name}</h3>
+          <p>${value.desc}</p>
+          <h4>$${value.price}</h4>
+          <button onclick=addToCart(${value.id})>Add to Cart</button>
+          </div>
+          `;
+      });
+      divProducts.innerHTML = str + "</div>";
+    });
 };
