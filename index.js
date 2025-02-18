@@ -193,4 +193,4 @@ const showProducts = () => {
       });
       divProducts.innerHTML = str + "</div>";
     });
-};
+}; 
